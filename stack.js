@@ -107,6 +107,58 @@ function matchingParen(input) {
   
 }
 
+
+
+//1 2 3 4 5
+function sortStack(stack) {
+  let sortedStack = new Stack();
+  sortedStack.push(stack.pop());
+  
+  while(stack.top !== null) {
+
+    if(sortedStack.top.data >= stack.top.data) {
+      sortedStack.push(stack.pop());
+    } else if(sortedStack.top.data <= stack.top.data) {
+      // 1 2 3 4 5
+      // sst = 1 st = 2 3 4 5
+      // sst = 1 st = 3 4 5 temp = 2
+      // sst = null st = 1 3 4 5 temp = 2
+      // sst = null st = 2 1 3 4 5
+      // sst = 2 st = 1 3 4 5
+      // sst = 2 st = 3 4 5 temp = 1
+      // sst = 1 2 st = 3 4 5
+      // sst = 3 1 2 st = 4 5 
+
+      let temp = stack.pop();
+      if(sortedStack.top.data > temp) {
+        sortedStack.push(temp);
+        temp = sortedStack.pop();
+        sortedStack.push(stack.pop());
+        stack.push(temp);
+      } else {
+        stack.push(sortedStack.pop());
+        stack.push(temp);
+        sortedStack.push(stack.pop());
+      }
+      
+    }
+
+    
+  }
+
+
+  //   if(sortedStack.top.data > stack.top.data) {
+  //     hold = new _Node(stack.top.data, sortedStack.top);
+  //     sortedStack.push(hold);
+  //     stack.pop();
+  //   } else {
+  //     hold = stack.pop();
+  //   }
+
+  display(sortedStack);
+  return sortedStack;
+}
+
 function main() {
   let starTrek = new Stack();
   starTrek.push('Kirk');
@@ -127,11 +179,36 @@ function main() {
 // console.log(palindrome('1001'));
 // console.log(palindrome('Tauhida'));
 
-matchingParen('(2 + 2)');
-matchingParen(')( ))');
-matchingParen('((())');
-matchingParen('{()]');
+// matchingParen('(2 + 2)');
+// matchingParen(')( ))');
+// matchingParen('((())');
+// matchingParen('{()]');
 
-matchingParen(`'()'`);
-matchingParen(`'(`);
-matchingParen(`"''())((()()()))"'`);
+// matchingParen(`'()'`);
+// matchingParen(`'(`);
+// matchingParen(`"''())((()()()))"'`);
+
+function mainSort() {
+  let stack = new Stack();
+  stack.push(5);
+  stack.push(4);
+  stack.push(3);
+  stack.push(2);
+  stack.push(1);
+  sortStack(stack);
+  // display(stack);
+}
+
+function secondSort() {
+  let stack = new Stack();
+  stack.push(1);
+  stack.push(3);
+  stack.push(5);
+  stack.push(4);
+  stack.push(2);
+  sortStack(stack);
+}
+
+mainSort();
+
+secondSort();
