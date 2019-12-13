@@ -93,7 +93,7 @@ class _NodeQueueStack {
 
 class _NodeStack {
   constructor(data, next) {
-    this.data = next;
+    this.data = data;
     this.next = next;
   }
 }
@@ -105,15 +105,17 @@ class Stack {
 
   push(data) {
     if(this.top === null) {
-      this.top = new _Node(data, null);
+      this.top = new _NodeStack(data, null);
       return this.top;
     }
-
-    const node = new _Node(data, this.top);
+    const node = new _NodeStack(data, this.top);
     this.top = node;
   }
   
   pop() {
+    if(this.top === null) {
+      return;
+    }
     const node = this.top;
     this.top = node.next;
     return node.data;
@@ -124,23 +126,51 @@ class StackQueue {
   constructor() {
     this.first = null;
     this.last = null;
-    this.eqStack = new Stack();
-    this.dqStack = new Stack();
+    this.stackOne = new Stack();
+    this.stackTwo = new Stack();
   }
 
-  //dqStack keeps track of what's first
-  //eqStack keeps track of what's last
-
   enqueue(data) {
-    this.eqStack.push(data);
-    if(this.first === null) {
-      this.first = this.eqStack.top;
-    }
-    
+    this.stackOne.push(data);
+    // if(this.stackOne.top !== null) {
+    //   while(this.stackOne.top !== null) {
+    //     this.stackTwo.push(this.stackOne.pop());
+    //   }
+    //   this.stackOne.push(data);
+
+    //   this.last = this.stackOne.top;
+      
+    //   while(this.stackTwo.top !== null) {
+    //     this.stackOne.push(this.stackTwo.pop());
+    //   }
+      
+    //   this.stackOne.push(data);
+    //   if(this.first === null) {
+    //     this.first = this.stackOne.top;
+    //   }
+    // } else {
+    //   this.stackOne.push(data);
+    //   this.first = this.stackOne.top;
+    //   this.last = this.stackOne.top;
+    // }
   }
 
   dequeue() {
-    this.dqStack.pop();
+    // this.stackOne.pop();
+    // this.first = this.stackOne.top;
+
+    let poping = this.stackOne;
+    let pushing = this.stackTwo;
+
+    if(poping.top) {
+      let deq = poping.pop();
+      console.log('dequeing '+ deq + ' from stack');
+      return deq;
+    }
+
+    while(pushing.top) {
+      poping.push(pushing.pop());
+    }
   }
 }
 
@@ -158,6 +188,14 @@ function display(queue) {
   let currNode = queue.first;
   while(currNode !== null) {
     console.log(currNode.value);
+    currNode = currNode.next;
+  }
+}
+
+function stacksDisplay(queue) {
+  let currNode = queue.first;
+  while(currNode !== null) {
+    console.log(currNode.data);
     currNode = currNode.next;
   }
 }
@@ -194,6 +232,21 @@ function doubleMain() {
   starTrekDQ.dequeue();
   display(starTrekDQ);
 }
-main();
 
-doubleMain();
+function stacksMain() {
+  let starTrekStacks = new StackQueue();
+
+  starTrekStacks.enqueue('Kirk');
+  starTrekStacks.enqueue('Spock');
+  starTrekStacks.enqueue('Uhura');
+  starTrekStacks.enqueue('Sulu');
+  starTrekStacks.enqueue('Checkov');
+  // console.log(starTrekStacks.top.data);
+  stacksDisplay(starTrekStacks);
+}
+
+// main();
+
+// doubleMain();
+
+stacksMain();
