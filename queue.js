@@ -22,11 +22,11 @@ class QueueDouble {
   enqueue(data) {
     const node = new _Node(data);
 
-    if(this.first === null) {
+    if (this.first === null) {
       this.first = node;
     }
 
-    if(this.last) {
+    if (this.last) {
       node.previous = this.last;
       this.last.next = node;
     }
@@ -35,7 +35,7 @@ class QueueDouble {
   }
 
   dequeue() {
-    if(this.first === null) {
+    if (this.first === null) {
       return;
     }
 
@@ -43,7 +43,7 @@ class QueueDouble {
     this.first = this.first.next;
     this.first.previous = null;
 
-    if(node === this.last) {
+    if (node === this.last) {
       this.last = null;
     }
     return node.value;
@@ -59,11 +59,11 @@ class Queue {
   enqueue(data) {
     const node = new _Node(data);
 
-    if(this.first === null) {
+    if (this.first === null) {
       this.first = node;
     }
 
-    if(this.last) {
+    if (this.last) {
       this.last.next = node;
     }
 
@@ -71,13 +71,13 @@ class Queue {
   }
 
   dequeue() {
-    if(this.first === null) {
+    if (this.first === null) {
       return;
     }
     const node = this.first;
     this.first = this.first.next;
 
-    if(node === this.last) {
+    if (node === this.last) {
       this.last = null;
     }
     return node.value;
@@ -104,22 +104,26 @@ class Stack {
   }
 
   push(data) {
-    if(this.top === null) {
+    if (this.top === null) {
       this.top = new _NodeStack(data, null);
       return this.top;
     }
     const node = new _NodeStack(data, this.top);
     this.top = node;
   }
-  
+
   pop() {
-    if(this.top === null) {
+    if (this.top === null) {
       return;
     }
     const node = this.top;
     this.top = node.next;
     return node.data;
   }
+}
+
+function peek(queue) {
+  return queue.first;
 }
 
 class StackQueue {
@@ -132,70 +136,45 @@ class StackQueue {
 
   enqueue(data) {
     this.stackOne.push(data);
-    // if(this.stackOne.top !== null) {
-    //   while(this.stackOne.top !== null) {
-    //     this.stackTwo.push(this.stackOne.pop());
-    //   }
-    //   this.stackOne.push(data);
-
-    //   this.last = this.stackOne.top;
-      
-    //   while(this.stackTwo.top !== null) {
-    //     this.stackOne.push(this.stackTwo.pop());
-    //   }
-      
-    //   this.stackOne.push(data);
-    //   if(this.first === null) {
-    //     this.first = this.stackOne.top;
-    //   }
-    // } else {
-    //   this.stackOne.push(data);
-    //   this.first = this.stackOne.top;
-    //   this.last = this.stackOne.top;
-    // }
   }
 
   dequeue() {
-    // this.stackOne.pop();
-    // this.first = this.stackOne.top;
+    this._reverseElement();
+    return this.stackTwo.pop();
+  }
+  peek() {
+    this._reverseElement();
+    return this.stackTwo.first;
+  };
 
-    let poping = this.stackOne;
-    let pushing = this.stackTwo;
-
-    if(poping.top) {
-      let deq = poping.pop();
-      console.log('dequeing '+ deq + ' from stack');
-      return deq;
-    }
-
-    while(pushing.top) {
-      poping.push(pushing.pop());
+  _reverseElement() {
+    if (isEmpty(this.stackTwo)) {
+      while (!isEmpty(this.stackOne)) {
+        this.stackTwo.push(this.stackOne.pop());
+      }
     }
   }
 }
 
-function peek(queue) {
-  return queue.first;
-}
-
 function isEmpty(queue) {
-  if(queue.first === null) {
+  if (queue.first === null) {
     return true;
   } else return false;
 }
 
 function display(queue) {
   let currNode = queue.first;
-  while(currNode !== null) {
+  while (currNode !== null) {
     console.log(currNode.value);
     currNode = currNode.next;
   }
 }
 
 function stacksDisplay(queue) {
-  let currNode = queue.first;
-  while(currNode !== null) {
-    console.log(currNode.data);
+  console.log(queue.stackOne.top.data);
+  let currNode = queue.stackOne.top.data;
+  while (currNode !== null) {
+    console.log(currNode);
     currNode = currNode.next;
   }
 }
@@ -241,12 +220,99 @@ function stacksMain() {
   starTrekStacks.enqueue('Uhura');
   starTrekStacks.enqueue('Sulu');
   starTrekStacks.enqueue('Checkov');
-  // console.log(starTrekStacks.top.data);
+  // console.log(starTrekStacks.stackOne.top.data);
   stacksDisplay(starTrekStacks);
+}
+
+function squareDance(queue) {
+  const men = new Queue();
+  const women = new Queue();
+
+  const pairs = new Queue();
+
+  let personA, personB;
+  while (personA = queue.dequeue()) {
+    if (personA.gender === 'male') {
+      if (personB = women.dequeue()) {
+        pairs.enqueue([personA, personB]);
+      }
+      else {
+        men.enqueue(personA);
+      }
+    }
+
+    else if (personA.gender === 'female') {
+      if (personB = men.dequeue()) {
+        pairs.enqueue([personA, personB]);
+      }
+      else {
+        women.enqueue(personA);
+      }
+    }
+  }
+  return pairs;
+}
+
+const dance = new Queue();
+dance.enqueue({
+  name: 'Jane',
+  gender: 'female'
+});
+dance.enqueue({
+  name: 'Frank',
+  gender: 'male'
+});
+dance.enqueue({
+  name: 'John',
+  gender: 'male'
+});
+dance.enqueue({
+  name: 'Sherlock',
+  gender: 'male'
+});
+dance.enqueue({
+  name: 'Madonna',
+  gender: 'female'
+});
+dance.enqueue({
+  name: 'David',
+  gender: 'male'
+});
+dance.enqueue({
+  name: 'Christopher',
+  gender: 'male'
+});
+dance.enqueue({
+  name: 'Beyonce',
+  gender: 'female'
+});
+
+function bank() {
+  const queue = new Queue();
+
+  for (let i = 0; i < 20; i++) {
+    console.log('Person joins line');
+    queue.enqueue({
+      person: null
+    });
+
+    const person = queue.dequeue();
+    if (Math.random() < 0.25) {
+      console.log(`Person sent to the back`);
+      queue.enqueue(person);
+    }
+    else {
+      console.log(`Person processed`);
+    }
+  }
 }
 
 // main();
 
 // doubleMain();
 
-stacksMain();
+// stacksMain();
+
+// display(squareDance(dance));
+
+bank();
